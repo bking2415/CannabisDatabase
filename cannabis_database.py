@@ -12,56 +12,6 @@ import mysql.connector
 # importing functions from file
 import cannabis_database_functions as cdf
 
-# # Connect to MySQL Server
-# db = mysql.connector.connect(
-#     host="localhost",
-#     user="root",
-#     passwd="rea1dea1",
-#     auth_plugin='mysql_native_password'
-# )
-
-# mycursor = db.cursor()
-
-# mycursor.execute("CREATE DATABASE IF NOT EXISTS cannabisdatabase")
-# # Connect to MySQL database
-# db = mysql.connector.connect(
-#     host="localhost",
-#     user="root",
-#     passwd="rea1dea1",
-#     auth_plugin='mysql_native_password',
-#     database="cannabisdatabase"
-# )
-
-# mycursor = db.cursor()
-
-# # create FeaturedBrands table
-# mycursor.execute("CREATE TABLE IF NOT EXISTS FeaturedBrands (brand VARCHAR(50), followers INT, brandRank SMALLINT UNSIGNED, dateExecuted DATE, executionId INT PRIMARY KEY AUTO_INCREMENT);")
-# # create PopularProducts table
-# mycursor.execute("CREATE TABLE IF NOT EXISTS PopularProducts (mainCategory VARCHAR(50), subCategory VARCHAR(50), brand VARCHAR(50), productName VARCHAR(100), averageStars FLOAT, reviews INT, price FLOAT, productRank SMALLINT UNSIGNED, source VARCHAR(50), dateExecuted DATE, executionId INT PRIMARY KEY AUTO_INCREMENT);")
-
-# # making dataframe 
-# f_df = pd.read_csv("weedmaps_featured_brands.csv") 
-
-# # Insert Featured Brands DataFrame records one by one.
-# for i, row in f_df.iterrows():
-#     sql = "INSERT INTO FeaturedBrands (brand, followers, brandRank, dateExecuted) VALUES (" + "%s,"*(len(row)-1) + "%s)"
-#     mycursor.execute(sql, tuple(row))
-
-#     # the connection is not autocommitted by default, so we must commit to save our changes
-#     db.commit()
-    
-
-# p_df = pd.read_csv("weedmaps_popular_products.csv") 
-# p_df = p_df.astype(object).where(pd.notnull(p_df), None)
-
-# # Insert Popular Products DataFrame records one by one.
-# for i, row in p_df.iterrows():
-#     sql = "INSERT INTO PopularProducts (mainCategory, subCategory, brand, productName, averageStars, reviews, price, productRank, source, dateExecuted) VALUES (" + "%s,"*(len(row)-1) + "%s)"
-#     mycursor.execute(sql, tuple(row))
-
-#     # the connection is not autocommitted by default, so we must commit to save our changes
-#     db.commit()
-
 # creating the date object of today's date
 today = date.today()
 
@@ -227,8 +177,6 @@ product_category_dict, popular_products_df = cdf.create_popular_products_data(pr
 
 print("Finished Scraping Popular Products Data!")
 
-print(len(popular_products_df))
-
 # Create csv files for DataFrames
 # output_path="weedmaps_featured_brands.csv"
 # featured_brands_df.to_csv(output_path, mode='a')
@@ -249,7 +197,7 @@ print(len(popular_products_df))
 
 # # mycursor = db.cursor()
 
-# # mycursor.execute("CREATE DATABASE IF NOT EXISTS cannabisdatabase")
+# mycursor.execute("CREATE DATABASE IF NOT EXISTS cannabisdatabase")
 # # Connect to MySQL Database
 # db = mysql.connector.connect(
 #     host="localhost",
