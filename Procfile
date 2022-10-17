@@ -1,2 +1,2 @@
-web: python cannabis_database.py
-worker: python cannabis_database.py 
+web: python3 cannabis_database.py
+worker: python3 cannabis_database.py
