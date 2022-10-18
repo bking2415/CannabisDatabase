@@ -94,6 +94,6 @@ mycursor.execute("CREATE TABLE IF NOT EXISTS LeaflyDailyProducts (collectionType
 # Insert LeaflyDailyProducts DataFrame records one by one.
 table_name = "LeaflyDailyProducts"
 columns = "(collectionType, brand, productName, price, amount, unit, pickUp, distance, distanceMetric, pageNumber, productRank, source, dateExecuted)"
-cdf.add_dataframe_to_mysql(collection_products_df, table_name, columns, db, mycursor)
+# cdf.add_dataframe_to_mysql(collection_products_df, table_name, columns, db, mycursor)
 
 print("Finished Updating Leafly.com Data in Database!")
