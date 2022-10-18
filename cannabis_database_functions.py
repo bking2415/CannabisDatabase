@@ -130,7 +130,7 @@ def create_popular_products_data(list_products, current_date):
                 weedmaps_products_by_category_doc = load_data("https://weedmaps.com/products/" + category + "/" + sub_category)
                 # Scrape Popular products from main category
                 popular_products_dict = scrape_popular_products_data(weedmaps_products_by_category_doc, popular_products_dict, category, sub_category)
-    # Create a dataframe for Featured Brands
+    # Create a dataframe for Popular Products
     popular_products_df = pd.DataFrame.from_dict(popular_products_dict)
     # Add Source
     popular_products_df["source"] = "Weedmaps"
@@ -139,3 +139,123 @@ def create_popular_products_data(list_products, current_date):
     # Convert Python NaN values to NULL Values to translate to MySQL
     popular_products_df = popular_products_df.astype(object).where(pd.notnull(popular_products_df), None)
     return product_category_dict, popular_products_df
+
+# Function to Scrape Individual Collection Page from Leafly.com
+def scrape_collection_page_product_data(data_doc, collections_dict, collections_type, page_number):
+    # Find products and details
+    products_collection = data_doc.find(class_="mb-section row")
+    # Filter only products in the container
+    products_text = products_collection.find_all(["article"], attrs={"class":["ct-product-card-v2"]})
+    for product in products_text:
+        # Add collection type to dictionary
+        collections_dict['collection'].append(collections_type)
+        # Add collection type to dictionary
+        collections_dict['page_number'].append(page_number)
+        # Product Name and Brand
+        product_details = product.contents[0].contents[0].contents[1].text
+        product_name = product_details.split("by")[0]
+        # Add product_name to dictionary
+        collections_dict['product_name'].append(product_name)
+        brand = product_details.split("by")[1].split(" ")[1]
+        brand = ''.join([i for i in brand if i.isalpha() or i == " "]).lstrip().rstrip()
+        # Add brand to dictionary
+        collections_dict['brand'].append(brand)
+        # Product detail check
+        if len(product.contents[0].contents[1].contents) == 3 and product.contents[0].contents[1].contents != []:
+            # Product amount and unit | price | pick-up and distance
+            product_dimensions, product_price, pick_up_credentials = product.contents[0].contents[1].contents
+            # Product amount
+            amount = float(product_dimensions.text.split(" ")[0])
+            # Add amount to dictionary
+            collections_dict['amount'].append(amount)
+            # Product unit
+            unit = product_dimensions.text.split(" ")[1]
+            # Add unit to dictionary
+            collections_dict['unit'].append(unit)
+            # Product price
+            price = float(''.join([i for i in product_price.text if i.isdigit() or i == '.']))
+            # Add price to dictionary
+            collections_dict['price'].append(price)
+            # Product Pickup Credentials
+            if pick_up_credentials.text.split(" ")[0].lower() == "pickup":
+                # Product Pick-Up
+                pick_up = 1
+                # Product Distance
+                distance = float(pick_up_credentials.text.split(" ")[1])
+                # Product Distance Metric
+                distance_metric = pick_up_credentials.text.split(" ")[2]
+            else:
+                # Product Pick-Up
+                pick_up = 0
+                # Product Distance
+                distance = None
+                # Product Distance Metric
+                distance_metric = None
+        else:
+            # Add amount to dictionary
+            collections_dict['amount'].append(None)
+            # Add unit to dictionary
+            collections_dict['unit'].append(None)
+            # Add price to dictionary
+            collections_dict['price'].append(None)
+            # Product Pick-Up
+            pick_up = 0
+            # Product Distance
+            distance = None
+            # Product Distance Metric
+            distance_metric = None
+        # Add pick_up to dictionary
+        collections_dict['pick_up'].append(pick_up)
+        # Add distance to dictionary
+        collections_dict['distance'].append(distance)
+        # Add distance metric to dictionary
+        collections_dict['distance_metric'].append(distance_metric)
+    print(f"Done Scraping Page {page_number}!")
+    return collections_dict
+
+# Function to scrape all pages for each collection
+def scrape_all_collection_pages_product_data(collection_row, current_date):
+    # Collections Products Dictionary
+    collection_products_dict = {'collection': [],'brand': [], 'product_name': [], 'price': [], 'amount': [], 'unit': [], 'pick_up': [], 'distance': [], 'distance_metric': [], 'page_number': [], 'rank': []}
+    # Identify collection contents
+    for row in collection_row:
+        # Collection Type
+        collection_type = row.text.split(" ")[0].lower()
+        # Find All Products and Product Prices for Collection (Leafly)
+        collection_url = f"https://www.leafly.com/products/collections/{collection_type}"
+        leafly_collections_products_doc = load_data(collection_url)
+        # Page text
+        page_text = leafly_collections_products_doc.find(class_="pagination mb-section")
+        # Number of Pages
+        pages = int(page_text.contents[-2].text)
+        for page in range(1, pages+1):
+            # Get url for page number
+            page_url = f"https://www.leafly.com/products/collections/{collection_type}?page={page}"
+            collections_products_page_doc = load_data(page_url)
+            # Dynamically get pages from 
+            collection_products_dict = scrape_collection_page_product_data(collections_products_page_doc, collection_products_dict, collection_type, page)
+        # Number of products per collections
+        num_of_products = collection_products_dict['collection'].count(collection_type)
+        # Add rank of products
+        collection_products_dict['rank'] += list(range(1,num_of_products+1))
+        print(f"Done Scraping Collection {collection_type}!")
+    # Create a dataframe for Collections Products
+    collection_products_df = pd.DataFrame.from_dict(collection_products_dict)
+    # Add Source
+    collection_products_df["source"] = "Leafly"
+    # Add Current Date
+    collection_products_df["date"] = current_date
+    # Convert Python NaN values to NULL Values to translate to MySQL
+    collection_products_df = collection_products_df.astype(object).where(pd.notnull(collection_products_df), None) 
+    return collection_products_df
+
+"""MySQL Database Functions"""
+# Function to add DataFrame to MySQL Database
+def add_dataframe_to_mysql(dataframe, table_name, table_columns, database_connection, cursor):
+    # Insert Featured Brands DataFrame records one by one.
+    for i, row in dataframe.iterrows():
+        sql = f"INSERT INTO {table_name} {table_columns} VALUES (" + "%s,"*(len(row)-1) + "%s)"
+        cursor.execute(sql, tuple(row))
+
+        # the connection is not autocommitted by default, so we must commit to save our changes
+        database_connection.commit()
