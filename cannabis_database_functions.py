@@ -5,6 +5,9 @@ import pandas as pd
 from pandas import DataFrame
 import base64
 import numpy as np
+# importing Google Drive
+import gspread
+import gspread_dataframe as gd
 
 # Function to load data from webpage
 def load_data(webpage_link):
@@ -259,3 +262,14 @@ def add_dataframe_to_mysql(dataframe, table_name, table_columns, database_connec
 
         # the connection is not autocommitted by default, so we must commit to save our changes
         database_connection.commit()
+        
+"""Google Sheets Functions"""
+def append_dataframe_to_google_sheets(google_connector, file_name, sheet_name, df):
+    ws = google_connector.open(file_name).worksheet(sheet_name)
+    existing = gd.get_as_dataframe(ws)
+    existing = existing.dropna(how='all') # Drop all NULL Rows
+    existing = existing.dropna(axis=1, how='all') # Drop all NULL Columns
+    df.columns = existing.columns # Change column names
+    updated = pd.concat([existing, df], axis=0, ignore_index=True).reset_index(drop=True)
+    gd.set_with_dataframe(ws, updated) # Add to Google Sheets
+    return updated 

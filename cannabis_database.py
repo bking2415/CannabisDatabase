@@ -9,8 +9,12 @@ import numpy as np
 from datetime import date
 # importing MySQL 
 import mysql.connector
+# importing Google Drive
+import gspread
+import gspread_dataframe as gd
 # importing functions from file
 import cannabis_database_functions as cdf
+
 
 # creating the date object of today's date
 today = date.today()
@@ -35,7 +39,7 @@ weedmaps_products_doc = cdf.load_data("https://weedmaps.com/products")
 # Product Category Dictionary
 product_category_lst = cdf.find_product_categories(weedmaps_products_doc)
 # Popular Products DataFrame
-# product_category_dict, popular_products_df = cdf.create_popular_products_data(product_category_lst, todays_date)
+product_category_dict, popular_products_df = cdf.create_popular_products_data(product_category_lst, todays_date)
 
 print("Finished Scraping Popular Products Data!")
 
@@ -69,12 +73,12 @@ mycursor.execute("CREATE TABLE IF NOT EXISTS PopularProducts (mainCategory VARCH
 # Insert Featured Brands DataFrame records one by one.
 table_name = "FeaturedBrands"
 columns = "(brand, followers, brandRank, dateExecuted)"
-# cdf.add_dataframe_to_mysql(featured_brands_df, table_name, columns, db, mycursor)
+cdf.add_dataframe_to_mysql(featured_brands_df, table_name, columns, db, mycursor)
 
 # Insert Popular Products DataFrame records one by one.
 table_name = "PopularProducts"
 columns = "(mainCategory, subCategory, brand, productName, averageStars, reviews, price, productRank, source, dateExecuted)"
-# cdf.add_dataframe_to_mysql(popular_products_df, table_name, columns, db, mycursor)
+cdf.add_dataframe_to_mysql(popular_products_df, table_name, columns, db, mycursor)
     
 print("Finished Updating Weedmap.com Data in Database!")
 
@@ -94,6 +98,25 @@ mycursor.execute("CREATE TABLE IF NOT EXISTS LeaflyDailyProducts (collectionType
 # Insert LeaflyDailyProducts DataFrame records one by one.
 table_name = "LeaflyDailyProducts"
 columns = "(collectionType, brand, productName, price, amount, unit, pickUp, distance, distanceMetric, pageNumber, productRank, source, dateExecuted)"
-# cdf.add_dataframe_to_mysql(collection_products_df, table_name, columns, db, mycursor)
+cdf.add_dataframe_to_mysql(collection_products_df, table_name, columns, db, mycursor)
 
 print("Finished Updating Leafly.com Data in Database!")
+
+"""Add Data to Google Sheets"""
+# Connecting with `gspread` here
+gc = gspread.service_account(filename='cannabisdatabase-c8145b23ad66.json')
+
+# Add to FeatureBrands Google Sheets file
+file_name = "CannabisDatabase"
+sheet_name = "FeaturedBrands" 
+cdf.append_dataframe_to_google_sheets(gc, file_name, sheet_name, featured_brands_df)
+
+# Add to PopularProducts Google Sheets file
+sheet_name = "PopularProducts"
+cdf.append_dataframe_to_google_sheets(gc, file_name, sheet_name, popular_products_df)
+
+# Add to LeaflyDailyProducts Google Sheets file
+sheet_name = "LeaflyDailyProducts"
+cdf.append_dataframe_to_google_sheets(gc, file_name, sheet_name, collection_products_df)
+
+print("Finished Adding Data to Google Sheets!")

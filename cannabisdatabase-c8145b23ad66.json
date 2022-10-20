@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "cannabisdatabase",
+  "private_key_id": "c8145b23ad66d18a7e9f3045c074d57230068ccc",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCNHWreWqHj5/lz\noH7b1WZfeHEg+n4oALM6JTtQAvg1EIdH8vDcQM6WP3WCA4oV45PCPhLYkC2ZQKjK\nHcAKauzq5xCB6Y/mYxRnIgxKmyz5nTKV3PJnfDOaY0e/PoXlMwncQEq3Boki06/W\nvskxqmKtMu3LIgfpGcfigKUeSSqSLegF77eC89cC2w9TJyGQUHKbDJ2lza0JN9ec\n5fUWGh2djinplI5SFjJfsD27rSBNqhGskBDNecyIYRN2nBkITYzZufqFrfU46Ye/\n9gjnaFQArr/C3RelevCug0Gz1HPaZVv2xMV69F/EXmmfSsrtU77n48vpENtD3KkO\n0Bs276RlAgMBAAECggEABHiAa8LKt6BtHNz8JLVtYZK8k5mY1WY14QUDJlhJvWik\ni8KzH2jZz3thzivHIqvLzeiCJIrnOIbXZVV6J/pWPv6K3XEx+Wl9lBZ8j2dWJ++M\n7DmMea6lXEiCVX+pTBpVv1aCgRG7o4PtLlKe2vkPPw+xGYsekNbojpEAnWW4OKeG\noKMTRyqThVbcGj4cNZLF/QtwH+d3uBfPsoOsybjzUqRw1BCftGYFH3y/xGUY2OEt\nu10HBtc+2IigDi3Cl41vgHbwyMIVWXblVJg0Lk+f1+oWIWOFNXZhYfxQ0jAEtJim\nDv5wgI7DXRnDf+K0LKZeLnKt/PI0s3JfLFB+KwwnSwKBgQC/b6WBeXfXYMc1JvtF\njdkLcueqUEtCs1KBEaBjpuvfECgChm0WD4nDnJQLdjhZHBC/MzkaI+PaKh4rdc3O\nTefP/fmi9qvpU0jDOeQl/ho2wnQmvzVEcmczbRz5q6Rqg9ZqRWKpl8ROhK+DksYC\nR1HKdr53mjpuc/RA/kjRHj+J9wKBgQC8tRntKfELl0d4ofE87CoNNcDDhuDSCFOQ\n6/B+T7XwSOZvVHm5dM0TARHoILsKGN/1CO9+mbiOwn4QrZdd9fVb3Hk7Jr2HoZZp\nUpoOymgMjmrGv3drT+4Ec27vmn+ZtDH405X66xuPgjK6GZzB7BWBeoVo3t9+bLgo\ngc4QSkmNgwKBgQCYFLoHAdiS4e9f6nfz6Zxj3ATu6JrhglQo9TfV8uWvb8ZZOzGu\nNOnc3Kc/88sP/5vOSYMzoQ+CYbNWE2BMZNekBMAtFom78s37SiJVjGiG2DQuE/jd\nR4V09Vnvfsw/Uj0kb7rRwB/TwNUuUYu8g6wWi/8ERSHmXXfNqjVu6/jOQQKBgFg6\nUAnbbzCdJTRYesKiJDMS67I/MIPikreSKFnWCNl0LBDnLRYxbuQwvt+J1gktgiA9\nckP9uRU+B9TiZH/wzCuL1D58qWZtfTZ3AUJjDey49WFBCaNptn3sPnTWBkylvCt7\nOYccP0GEfRUXfnwIVjG4SAG1Gkcwq5V8wwxIv0TjAoGAVtyUpQyLI4fc2ir1mQtC\nZVpm0jFY+OWy3Z2Zk3eoJpoIeZaIHYW1GkfNhNaHPqhaXQTnwQj5lVc1Mu7FS8CM\nme8Z2d0wZn/2qEamPZ2xDUaQyUogj/VLN3vzA/QnABSp0WMtU5kkj4ZWQ8PFY6TK\nT9XV+dKAikU65RJLqG30lWU=\n-----END PRIVATE KEY-----\n",
+  "client_email": "data-891@cannabisdatabase.iam.gserviceaccount.com",
+  "client_id": "105789907054928155312",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/data-891%40cannabisdatabase.iam.gserviceaccount.com"
+}
