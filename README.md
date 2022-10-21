@@ -1,5 +1,5 @@
 # CannabisDatabase
-Automated Data Warehouse to store Cannabis Product Data. This projects scrapes propular cannabis/marijuana webpages and collects the data of brands and products to store within a database and create automated data visualizations.
+Automated Data Warehouse to store Cannabis Product Data. This projects scrapes popular cannabis/marijuana webpages and collects the data of brands and products to store within a database and create automated data visualizations.
 
 **Data Sources:**
 - [Weedmaps](https://weedmaps.com/)
