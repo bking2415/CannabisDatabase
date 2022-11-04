@@ -273,3 +273,18 @@ def append_dataframe_to_google_sheets(google_connector, file_name, sheet_name, d
     updated = pd.concat([existing, df], axis=0, ignore_index=True).reset_index(drop=True)
     gd.set_with_dataframe(ws, updated) # Add to Google Sheets
     return updated 
+
+def create_csv_file_from_multiple_google_worksheets(google_connector, file_name, worksheet_list, columns):
+    # create an Empty DataFrame object
+    products_df= pd.DataFrame()
+    for sheet_name in worksheet_list:
+        ws = google_connector.open(file_name).worksheet(sheet_name)
+        existing = gd.get_as_dataframe(ws)
+        existing = existing.dropna(how='all') # Drop all NULL Rows
+        existing = existing.dropna(axis=1, how='all') # Drop all NULL Columns
+        # Subset of Products Data
+        sub_products_df = existing[columns]
+        products_df = pd.concat([products_df, sub_products_df], axis=0, ignore_index=True).reset_index(drop=True)
+    # Add to csv file
+    products_df.to_csv("cannabis_products.csv",index=False) 
+    return products_df

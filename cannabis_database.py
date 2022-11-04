@@ -109,14 +109,37 @@ gc = gspread.service_account(filename='cannabisdatabase-c8145b23ad66.json')
 # Add to FeatureBrands Google Sheets file
 file_name = "CannabisDatabase"
 sheet_name = "FeaturedBrands" 
-cdf.append_dataframe_to_google_sheets(gc, file_name, sheet_name, featured_brands_df)
+weedmaps_brands_df = cdf.append_dataframe_to_google_sheets(gc, file_name, sheet_name, featured_brands_df)
 
 # Add to PopularProducts Google Sheets file
 sheet_name = "PopularProducts"
-cdf.append_dataframe_to_google_sheets(gc, file_name, sheet_name, popular_products_df)
+weedmaps_products_df = cdf.append_dataframe_to_google_sheets(gc, file_name, sheet_name, popular_products_df)
 
 # Add to LeaflyDailyProducts Google Sheets file
 sheet_name = "LeaflyDailyProducts"
-cdf.append_dataframe_to_google_sheets(gc, file_name, sheet_name, collection_products_df)
+leafly_products_df = cdf.append_dataframe_to_google_sheets(gc, file_name, sheet_name, collection_products_df)
 
 print("Finished Adding Data to Google Sheets!")
+
+"""Combining Product Data"""
+sheet_lst = ["PopularProducts", "LeaflyDailyProducts"]
+sub_columns = ["mainCategory", "brand", "productName","productRank", "source", "dateExecuted", "price"]
+# Create csv file from existing google sheets data
+products_df = cdf.create_csv_file_from_multiple_google_worksheets(gc, file_name, sheet_lst, sub_columns)
+
+print("Finished Adding Product Data to CSV File!")
+
+"""Predicting Next-Day Price of Products"""
+# 1. Data-preprocessing
+# data_split = products_df["dateExecuted"].str.split('-', expand=True)
+ 
+# products_df['day'] = data_split[2]
+# products_df['month'] = data_split[1]
+# products_df['year'] = data_split[0]
+
+# # products_df["price"] = products_df["price"].astype('float')
+# print(products_df[products_df["price"] == 'Pre-Rolls 2.5g 5-pack'])
+# # print(products_df.isnull().sum())
+# # print(products_df.shape)
+# print(products_df.dtypes) 
+# # print(products_df.head())
