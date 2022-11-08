@@ -131,15 +131,44 @@ print("Finished Adding Product Data to CSV File!")
 
 """Predicting Next-Day Price of Products"""
 # 1. Data-preprocessing
-# data_split = products_df["dateExecuted"].str.split('-', expand=True)
- 
-# products_df['day'] = data_split[2]
-# products_df['month'] = data_split[1]
-# products_df['year'] = data_split[0]
 
-# # products_df["price"] = products_df["price"].astype('float')
-# print(products_df[products_df["price"] == 'Pre-Rolls 2.5g 5-pack'])
-# # print(products_df.isnull().sum())
-# # print(products_df.shape)
+# # Get all rows from DataFrame where price is not NULL
+# products_df = products_df[products_df['price'].notna()]
+# # Drop duplicates
+# products_df = products_df.drop_duplicates(subset=['productName', "dateExecuted"])
+# # Remove rows in price equal string
+# products_df = products_df[products_df['price'] != 'Pre-Rolls 2.5g 5-pack']
+# # Change price column to float
+# products_df["price"] = products_df["price"].astype('float')
+# # Sort values by name then date
+# products_df = products_df.sort_values(by=['productName', "dateExecuted"])
+# # shifting by previous price
+# products_df['prevPrice'] = products_df.groupby('productName')["price"].shift(1)
+
+# # Calculate Price Difference
+# products_df['priceDiff'] = (products_df['price'] - products_df['prevPrice'])
+
+# # Change dateExecuted column to datetime
+# products_df["dateExecuted"] = pd.to_datetime(products_df["dateExecuted"])
+# # shifting by previous dates
+# products_df['prevDate'] = products_df.groupby('productName')["dateExecuted"].shift(1)
+
+# # Calculate Date Difference
+# products_df['dateDiff'] = (products_df["dateExecuted"] - products_df['prevDate']).dt.days
+
+# # Get all rows from DataFrame where prevPrice is not NULL
+# products_df = products_df[products_df['prevPrice'].notna()]
+# # Get all rows from DataFrame where prevDate is not NULL
+# products_df = products_df[products_df['prevDate'].notna()]
+
+# # Get day, month and year from datetime column
+# # products_df['day'] = pd.DatetimeIndex(products_df["dateExecuted"]).day
+# # products_df['month'] = pd.DatetimeIndex(products_df["dateExecuted"]).month
+# # products_df['year'] = pd.DatetimeIndex(products_df["dateExecuted"]).year
+# # Change mainCategory column to category
+# products_df["mainCategory"] = products_df["mainCategory"].astype('category')
+
+# print_columns = ['productName', "dateExecuted", 'prevDate', 'dateDiff', "price", 'prevPrice', 'priceDiff']
+# print(products_df[print_columns].head(10))
+# print(products_df.shape)
 # print(products_df.dtypes) 
-# # print(products_df.head())
